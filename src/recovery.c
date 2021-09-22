@@ -42,7 +42,8 @@ static int recovery_progress_callback(irecv_client_t client, const irecv_event_t
 	return 0;
 }
 
-void recovery_client_free(struct idevicerestore_client_t* client) {
+void recovery_client_free(struct idevicerestore_client_t* client)
+{
 	if(client) {
 		if (client->recovery) {
 			if(client->recovery->client) {
@@ -55,7 +56,8 @@ void recovery_client_free(struct idevicerestore_client_t* client) {
 	}
 }
 
-int recovery_client_new(struct idevicerestore_client_t* client) {
+int recovery_client_new(struct idevicerestore_client_t* client)
+{
 	int i = 0;
 	int attempts = 20;
 	irecv_client_t recovery = NULL;
@@ -148,6 +150,8 @@ int recovery_set_autoboot(struct idevicerestore_client_t* client, int enable) {
 int recovery_enter_restore(struct idevicerestore_client_t* client, plist_t build_identity) {
     if (client->build_major >= 8) {
 		client->restore_boot_args = strdup("rd=md0 nand-enable-reformat=1 -progress");
+	} else if (client->build_major >= 20) {
+		client->restore_boot_args = strdup("rd=md0 nand-enable-reformat=1 -progress -restore");
 	}
 
 	/* upload data to make device boot restore mode */
@@ -388,7 +392,8 @@ int recovery_send_ibec(struct idevicerestore_client_t* client, plist_t build_ide
 	return 0;
 }
 
-int recovery_send_applelogo(struct idevicerestore_client_t* client, plist_t build_identity) {
+int recovery_send_applelogo(struct idevicerestore_client_t* client, plist_t build_identity)
+{
 	const char* component = "RestoreLogo";
 	irecv_error_t recovery_error = IRECV_E_SUCCESS;
 
@@ -446,8 +451,14 @@ int recovery_send_loaded_by_iboot(struct idevicerestore_client_t* client, plist_
 		plist_dict_next_item(manifest_node, iter, &key, &node);
 		if (key == NULL)
 			break;
+
 		plist_t iboot_node = plist_access_path(node, 2, "Info", "IsLoadedByiBoot");
-		if (iboot_node && plist_get_node_type(iboot_node) == PLIST_BOOLEAN) {
+		plist_t iboot_stg1_node = plist_access_path(node, 2, "Info", "IsLoadedByiBootStage1");
+		uint8_t is_stg1 = 0;
+		if (iboot_stg1_node && plist_get_node_type(iboot_stg1_node) == PLIST_BOOLEAN) {
+			plist_get_bool_val(iboot_stg1_node, &is_stg1);
+		}
+		if (iboot_node && plist_get_node_type(iboot_node) == PLIST_BOOLEAN && !is_stg1) {
 			uint8_t b = 0;
 			plist_get_bool_val(iboot_node, &b);
 			if (b) {
@@ -465,7 +476,8 @@ int recovery_send_loaded_by_iboot(struct idevicerestore_client_t* client, plist_
 	return (err) ? -1 : 0;
 }
 
-int recovery_send_ramdisk(struct idevicerestore_client_t* client, plist_t build_identity) {
+int recovery_send_ramdisk(struct idevicerestore_client_t* client, plist_t build_identity)
+{
 	const char *component = "RestoreRamDisk";
 	irecv_error_t recovery_error = IRECV_E_SUCCESS;
 
@@ -498,7 +510,8 @@ int recovery_send_ramdisk(struct idevicerestore_client_t* client, plist_t build_
 	return 0;
 }
 
-int recovery_send_kernelcache(struct idevicerestore_client_t* client, plist_t build_identity) {
+int recovery_send_kernelcache(struct idevicerestore_client_t* client, plist_t build_identity)
+{
 	const char* component = "RestoreKernelCache";
 	irecv_error_t recovery_error = IRECV_E_SUCCESS;
 
@@ -533,7 +546,8 @@ int recovery_send_kernelcache(struct idevicerestore_client_t* client, plist_t bu
 	return 0;
 }
 
-int recovery_get_ecid(struct idevicerestore_client_t* client, uint64_t* ecid) {
+int recovery_get_ecid(struct idevicerestore_client_t* client, uint64_t* ecid)
+{
 	if(client->recovery == NULL) {
 		if (recovery_client_new(client) < 0) {
 			return -1;
@@ -565,7 +579,8 @@ int recovery_is_image4_supported(struct idevicerestore_client_t* client)
 	return (device_info->ibfl & IBOOT_FLAG_IMAGE4_AWARE);
 }
 
-int recovery_get_ap_nonce(struct idevicerestore_client_t* client, unsigned char** nonce, int* nonce_size) {
+int recovery_get_ap_nonce(struct idevicerestore_client_t* client, unsigned char** nonce, int* nonce_size)
+{
 	if(client->recovery == NULL) {
 		if (recovery_client_new(client) < 0) {
 			return -1;
@@ -589,7 +604,8 @@ int recovery_get_ap_nonce(struct idevicerestore_client_t* client, unsigned char*
 	return 0;
 }
 
-int recovery_get_sep_nonce(struct idevicerestore_client_t* client, unsigned char** nonce, int* nonce_size) {
+int recovery_get_sep_nonce(struct idevicerestore_client_t* client, unsigned char** nonce, int* nonce_size)
+{
 	if(client->recovery == NULL) {
 		if (recovery_client_new(client) < 0) {
 			return -1;

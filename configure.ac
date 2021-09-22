@@ -14,9 +14,16 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
 # Minimum package versions
+<<<<<<< HEAD
 LIBIRECOVERY_VERSION=1.0.0
 LIBIMOBILEDEVICE_VERSION=1.3.0
 LIBPLIST_VERSION=2.2.0
+=======
+LIBIRECOVERY_VERSION=1.0.1
+LIBIMOBILEDEVICE_VERSION=1.3.0
+LIBPLIST_VERSION=2.2.0
+LIMD_GLUE_VERSION=1.0.0
+>>>>>>> upstream/master
 LIBZIP_VERSION=0.8
 LIBCURL_VERSION=7.0
 OPENSSL_VERSION=0.9.8
@@ -25,6 +32,7 @@ ZLIB_VERSION=1.2
 AC_SUBST(LIBIRECOVERY_VERSION)
 AC_SUBST(LIBIMOBILEDEVICE_VERSION)
 AC_SUBST(LIBPLIST_VERSION)
+AC_SUBST(LIMD_GLUE_VERSION)
 AC_SUBST(LIBZIP_VERSION)
 AC_SUBST(LIBCURL_VERSION)
 AC_SUBST(OPENSSL_VERSION)
@@ -39,6 +47,7 @@ AC_PROG_LIBTOOL
 PKG_CHECK_MODULES(libirecovery, libirecovery-1.0 >= $LIBIRECOVERY_VERSION)
 PKG_CHECK_MODULES(libimobiledevice, libimobiledevice-1.0 >= $LIBIMOBILEDEVICE_VERSION)
 PKG_CHECK_MODULES(libplist, libplist-2.0 >= $LIBPLIST_VERSION)
+<<<<<<< HEAD
 PKG_CHECK_MODULES(libzip, libzip >= $LIBZIP_VERSION)
 PKG_CHECK_MODULES(libcurl, libcurl >= $LIBCURL_VERSION)
 PKG_CHECK_MODULES(openssl, openssl >= $OPENSSL_VERSION)
@@ -47,6 +56,20 @@ PKG_CHECK_MODULES(zlib, zlib >= $ZLIB_VERSION)
 # optional
 PKG_CHECK_MODULES(openssl, openssl >= $OPENSSL_VERSION, have_openssl=yes, have_openssl=no)
 
+=======
+PKG_CHECK_MODULES(limd_glue, libimobiledevice-glue-1.0 >= $LIMD_GLUE_VERSION)
+PKG_CHECK_MODULES(libzip, libzip >= $LIBZIP_VERSION)
+PKG_CHECK_MODULES(libcurl, libcurl >= $LIBCURL_VERSION)
+PKG_CHECK_MODULES(zlib, zlib)
+
+# optional
+PKG_CHECK_MODULES(openssl, openssl >= $OPENSSL_VERSION, have_openssl=yes, have_openssl=no)
+
+# Checking endianness
+AC_C_BIGENDIAN([AC_DEFINE([__BIG_ENDIAN__], [1], [big endian])],
+               [AC_DEFINE([__LITTLE_ENDIAN__], [1], [little endian])])
+
+>>>>>>> upstream/master
 GLOBAL_CFLAGS="-Wno-multichar -O2"
 AC_LDADD=""
 AC_LDFLAGS=""
@@ -139,7 +162,11 @@ fi
 AC_SUBST(openssl_CFLAGS)
 AC_SUBST(openssl_LIBS)
 
+<<<<<<< HEAD
 AM_CONDITIONAL(USE_INTERNAL_SHA1, test x$use_openssl != xyes)
+=======
+AM_CONDITIONAL(USE_INTERNAL_SHA, test x$use_openssl != xyes)
+>>>>>>> upstream/master
 
 AC_SUBST(GLOBAL_CFLAGS)
 AC_SUBST(AC_LDFLAGS)

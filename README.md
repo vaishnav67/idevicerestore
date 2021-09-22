@@ -8,7 +8,7 @@ The idevicerestore application is a full reimplementation of all granular steps
 which are performed during the restore of a firmware to a device.
 
 In general, upgrades and downgrades are possible, however subject to
-availability of SHSH blobs from Apple for signing the firmare files.
+availability of SHSH blobs from Apple for signing the firmware files.
 
 Some key features are:
 
@@ -48,6 +48,7 @@ sudo apt-get install \
 	libusb-1.0-0-dev \
 	libplist-dev \
 	libimobiledevice-dev \
+	libimobiledevice-glue-dev \
 	libcurl4-openssl-dev \
 	libssl-dev \
 	libzip-dev \
@@ -70,7 +71,7 @@ clone [these libraries](https://github.com/libimobiledevice/) separately and rep
 
 Continue with cloning the actual project repository:
 ```shell
-git clone https://github.com/libimobiledevice/idevicerestore.git
+git clone https://github.com/m1stadev/idevicerestore.git
 cd idevicerestore
 ```
 
@@ -79,6 +80,7 @@ Now you can build and install it:
 ./autogen.sh
 make
 sudo make install
+cd ..
 ```
 
 **Important**
@@ -162,4 +164,4 @@ iPadOS, tvOS, watchOS, and macOS are trademarks of Apple Inc.
 This project is an independent software application and has not been
 authorized, sponsored, or otherwise approved by Apple Inc.
 
-README Updated on: 2020-06-12
+README Updated on: 2021-09-22
